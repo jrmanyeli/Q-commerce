@@ -15,12 +15,16 @@ export const convertToLocale = ({
   maximumFractionDigits,
   locale = "en-US",
 }: ConvertToLocaleParams) => {
+  // Medusa stores prices in cents (smallest currency unit)
+  // We need to divide by 100 to get the actual currency amount
+  const amountInCurrency = amount / 100
+
   return currency_code && !isEmpty(currency_code)
     ? new Intl.NumberFormat(locale, {
-        style: "currency",
-        currency: currency_code,
-        minimumFractionDigits,
-        maximumFractionDigits,
-      }).format(amount)
-    : amount.toString()
+      style: "currency",
+      currency: currency_code,
+      minimumFractionDigits,
+      maximumFractionDigits,
+    }).format(amountInCurrency)
+    : amountInCurrency.toString()
 }

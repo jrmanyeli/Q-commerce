@@ -13,6 +13,16 @@ This guide provides simplified instructions for running the Q-Commerce backend a
 
 We have simplified the startup process. You can now run both the backend and frontend with a single command from the root directory.
 
+> **Important**: Ensure your `frontend/.env.local` is configured for local development:
+> - `MEDUSA_BACKEND_URL=http://localhost:9000`
+> - `NEXT_PUBLIC_BASE_URL=http://localhost:8000`
+
+1. **Check Ports** (Optional):
+   If you have run the app before, ensure ports 8000 and 9000 are free.
+   ```bash
+   npm run kill-ports
+   ```
+
 1. **Install Dependencies** (First time only):
    ```bash
    npm run install:all
@@ -46,6 +56,23 @@ npm run dev
 cd frontend
 yarn dev
 ```
+
+## Recent Fixes
+
+### Pagination Issue (2026-01-30)
+- **Fixed**: Product pagination was showing 34 pages instead of the correct 9 pages
+- **Root Cause**: The `listProductsWithSort` function was only fetching 100 products while calculating total pages based on the full product count
+- **Solution**: Updated to fetch all products by:
+  1. First fetching with limit of 1 to get total count
+  2. Then fetching all products using the actual count
+  3. This ensures all products are available for client-side sorting and pagination
+
+### Currency Display Fix
+- Fixed price display from cents to actual currency (e.g., R280.00 instead of R28,000.00)
+- Updated `convertToLocale` function to divide by 100
+
+### Product Thumbnails
+- Updated product aspect ratio from 9:16 to 1:1 for better display
 
 ## Troubleshooting
 

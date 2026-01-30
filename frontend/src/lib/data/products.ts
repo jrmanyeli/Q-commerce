@@ -106,13 +106,26 @@ export const listProductsWithSort = async ({
 }> => {
   const limit = queryParams?.limit || 12
 
+  // First, get the total count by fetching with minimal data
   const {
-    response: { products, count },
+    response: { count },
   } = await listProducts({
     pageParam: 0,
     queryParams: {
       ...queryParams,
-      limit: 100,
+      limit: 1,
+    },
+    countryCode,
+  })
+
+  // Now fetch all products using the actual count
+  const {
+    response: { products },
+  } = await listProducts({
+    pageParam: 0,
+    queryParams: {
+      ...queryParams,
+      limit: count,
     },
     countryCode,
   })

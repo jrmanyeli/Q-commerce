@@ -1,0 +1,9 @@
+tunnel: e102dc9e-952d-4567-a56c-7f200a4c19d2
+credentials-file: /Users/jrmanyeli/.cloudflared/e102dc9e-952d-4567-a56c-7f200a4c19d2.json
+
+ingress:
+  - hostname: quickdose.co.za
+    service: http://localhost:8000
+  - hostname: api.quickdose.co.za
+    service: http://localhost:9000
+  - service: http_status:404

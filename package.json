@@ -5,7 +5,8 @@
     "dev": "concurrently \"npm run dev:backend\" \"npm run dev:frontend\"",
     "dev:backend": "cd backend && npm run dev",
     "dev:frontend": "cd frontend && yarn dev",
-    "install:all": "cd backend && npm install && cd frontend && yarn install"
+    "install:all": "cd backend && npm install && cd frontend && yarn install",
+    "kill-ports": "lsof -ti:9000 | xargs kill -9; lsof -ti:8000 | xargs kill -9 || true"
   },
   "devDependencies": {
     "concurrently": "^8.2.2"

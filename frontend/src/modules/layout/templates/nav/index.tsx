@@ -27,7 +27,7 @@ export default async function Nav() {
               data-testid="nav-store-link"
             >
               <Image
-                src="/logo.png"
+                src="/logo-new.png"
                 alt="Quickdose"
                 width={150}
                 height={40}
