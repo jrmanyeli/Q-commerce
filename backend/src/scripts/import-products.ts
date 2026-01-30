@@ -74,6 +74,7 @@ export default async function importProducts({ container }: ExecArgs) {
     // 1. Locate and read CSV
     // Try multiple locations
     const possiblePaths = [
+        path.resolve(process.cwd(), "medusa_import_products_v2.csv"),
         path.resolve(process.cwd(), "medusa_import_products.csv"),
         path.resolve(process.cwd(), "../medusa_import_products.csv"),
         path.resolve(process.cwd(), "src/scripts/medusa_import_products.csv")
@@ -138,30 +139,17 @@ export default async function importProducts({ container }: ExecArgs) {
     // 3. Group by Product Handle (assuming multiple rows per product for variants)
     const productsMap = new Map<string, any>();
 
+    let rowIndex = 0;
     for (const row of parsedData) {
+        rowIndex++;
         // Map keys from CSV
         const handle = row['Product Handle'];
         if (!handle) continue;
 
-        // Handle Options & Variants
-        let option1Name = row['Variant Option 1 Name'];
-        let option1Value = row['Variant Option 1 Value'];
-
-        // Handle simple products (no options defined in CSV but has price)
-        if ((!option1Name || !option1Value) && row['Variant Price ZAR']) {
-            option1Name = "Option";
-            option1Value = "Default";
-        }
-
-        // Generate Unique Handle for Simple Products
-        let finalHandle = handle.replace(/-+/g, '-'); // Sanitize handle
-        if (option1Name === "Option" && option1Value === "Default") {
-            const sku = row['Variant SKU'];
-            if (sku) {
-                const skuSuffix = sku.toLowerCase().replace(/[^a-z0-9]+/g, '-');
-                finalHandle = `${finalHandle}-${skuSuffix}`.replace(/-+/g, '-');
-            }
-        }
+        // Generate UNIQUE Handle for EVERY row using an index to prevent any merging
+        const rawSku = row['Variant SKU'] || handle;
+        const skuSuffix = rawSku.toLowerCase().replace(/[^a-z0-9]+/g, '-');
+        const finalHandle = `${handle}-${skuSuffix}-${rowIndex}`.replace(/-+/g, '-');
 
         if (!productsMap.has(finalHandle)) {
             productsMap.set(finalHandle, {
@@ -173,11 +161,17 @@ export default async function importProducts({ container }: ExecArgs) {
                 sales_channels: [{ id: defaultSalesChannel.id }],
                 options: [],
                 variants: [],
-                images: row['Product Image 1 Url'] ? [{ url: row['Product Image 1 Url'] }] : []
+                images: [1, 2, 3, 4, 5]
+                    .map(i => row[`Product Image ${i} Url`])
+                    .filter(Boolean)
+                    .map(url => ({ url: url.trim() }))
             });
         }
 
         const product = productsMap.get(finalHandle);
+
+        let option1Name = row['Variant Option 1 Name'] || "Option";
+        let option1Value = row['Variant Option 1 Value'] || "Default";
 
         if (option1Name && option1Value) {
             // Add option if not exists
@@ -195,13 +189,9 @@ export default async function importProducts({ container }: ExecArgs) {
             // Assuming CSV is in main units (e.g. 130.0 for 130 ZAR), convert to cents
             const price = Math.round(rawPrice * 100);
 
-            // Ensure Unique SKU
-            // If we generated a unique handle, likely the SKU provided in CSV is shared across flavors
-            // So we default to using the unique handle as the SKU to ensure import success.
-            let finalSku = row['Variant SKU'] || `${handle}-${option1Value}`;
-            if (finalHandle !== handle) {
-                finalSku = finalHandle;
-            }
+            // Ensure SKU is globally unique in Medusa by using the unique handle
+            // Wix often reuses SKUs across different products (e.g. "Liquor-Cider" for all ciders)
+            const finalSku = finalHandle;
 
             product.variants.push({
                 title: `${option1Value}`,
@@ -221,12 +211,12 @@ export default async function importProducts({ container }: ExecArgs) {
 
     // 4. Import Products
     const allProducts = Array.from(productsMap.values());
-    const validProducts = allProducts.filter(p => p.variants.length > 0 && p.options.length > 0);
-    const invalidProducts = allProducts.filter(p => p.variants.length === 0 || p.options.length === 0);
+    const validProducts = allProducts.filter((p: any) => p.variants.length > 0 && p.options.length > 0);
+    const invalidProducts = allProducts.filter((p: any) => p.variants.length === 0 || p.options.length === 0);
 
     if (invalidProducts.length > 0) {
         logger.warn(`Skipping ${invalidProducts.length} products due to missing variants or options:`);
-        logger.warn(invalidProducts.map(p => p.handle).join(", "));
+        logger.warn(invalidProducts.map((p: any) => p.handle).join(", "));
     }
 
     logger.info(`Prepared ${validProducts.length} valid products for import.`);
