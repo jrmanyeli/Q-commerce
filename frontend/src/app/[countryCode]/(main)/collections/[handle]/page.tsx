@@ -1,11 +1,12 @@
 import { Metadata } from "next"
 import { notFound } from "next/navigation"
 
-import { getCollectionByHandle, listCollections } from "@lib/data/collections"
+import { listCategories } from "@lib/data/categories"
+import { listCollections, getCollectionByHandle } from "@lib/data/collections"
 import { listRegions } from "@lib/data/regions"
 import { StoreCollection, StoreRegion } from "@medusajs/types"
 import CollectionTemplate from "@modules/collections/templates"
-import { SortOptions } from "@modules/store/components/refinement-list/sort-products"
+import { SortOptions } from "@modules/store/components/refinement-list/sort-products/index"
 
 type Props = {
   params: Promise<{ handle: string; countryCode: string }>
@@ -79,9 +80,14 @@ export default async function CollectionPage(props: Props) {
     notFound()
   }
 
+  const categories = await listCategories()
+  const { collections } = await listCollections()
+
   return (
     <CollectionTemplate
       collection={collection}
+      categories={categories}
+      collections={collections}
       page={page}
       sortBy={sortBy}
       countryCode={params.countryCode}

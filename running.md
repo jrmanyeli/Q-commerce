@@ -1,169 +1,64 @@
 # Q-Commerce Application Guide
 
-This guide provides instructions for running the Q-Commerce backend and frontend applications.
+This guide provides simplified instructions for running the Q-Commerce backend and frontend applications.
 
 ## Prerequisites
 
 - Node.js >= 20
-- npm (for backend)
+- npm (for backend and root)
 - yarn (for frontend)
 - PostgreSQL database
 
-## Environment Setup
+## Quick Start
+
+We have simplified the startup process. You can now run both the backend and frontend with a single command from the root directory.
+
+1. **Install Dependencies** (First time only):
+   ```bash
+   npm run install:all
+   ```
+
+2. **Start Applications**:
+   ```bash
+   npm run dev
+   ```
+   This will start:
+   - Backend on [http://localhost:9000](http://localhost:9000)
+   - Frontend on [http://localhost:8000](http://localhost:8000)
+
+## Configuration Status
+
+- **Region**: South Africa (ZA)
+- **Currency**: South African Rand (ZAR)
+
+## Manual Setup (If needed)
+
+If you prefer to run them separately:
 
 ### Backend
-1. Navigate to the backend directory:
-   ```bash
-   cd backend
-   ```
-
-2. Copy the environment template:
-   ```bash
-   cp .env.template .env
-   ```
-
-3. Update the `.env` file with your configuration (database credentials, etc.)
-
-### Frontend
-1. Navigate to the frontend directory:
-   ```bash
-   cd frontend
-   ```
-
-2. Copy the environment template:
-   ```bash
-   cp .env.template .env.local
-   ```
-
-3. Update the `.env.local` file with your configuration (Medusa backend URL, Publishable API Key, etc.)
-
-## Running the Applications
-
-### Quick Start (Both Applications)
-
-From the root directory, you can run both applications in separate terminal windows:
-
-**Terminal 1 - Backend:**
 ```bash
 cd backend
 npm run dev
 ```
 
-**Terminal 2 - Frontend:**
-```bash
-cd frontend
-yarn dev
-```
-
-### Backend Only
-
-The backend runs on the default Medusa port (typically 9000).
-
-```bash
-cd backend
-
-# Development mode (with hot reload)
-npm run dev
-
-# Production mode
-npm run build
-npm start
-
-# Seed the database with sample data
-npm run seed
-```
-
-### Frontend Only
-
-The frontend runs on port 8000.
-
-```bash
-cd frontend
-
-# Development mode (with Turbopack)
-yarn dev
-
-# Production mode
-yarn build
-yarn start
-```
-
-## Port Mappings
-
-| Service  | Port | URL                    |
-|----------|------|------------------------|
-| Backend  | 9000 | http://localhost:9000  |
-| Frontend | 8000 | http://localhost:8000  |
-
-## Useful Commands
-
-### Backend
-- `npm run build` - Build the backend
-- `npm run seed` - Seed the database with sample data
-- `npm run test:unit` - Run unit tests
-- `npm run test:integration:http` - Run HTTP integration tests
-
 ### Frontend
-- `yarn lint` - Lint the code
-- `yarn build` - Build for production
-- `yarn analyze` - Analyze the bundle size
-
-## Creating Admin Credentials
-
-To create an admin user for the Medusa backend:
-
 ```bash
-cd backend
-npx medusa user --email admin@example.com --password supersecret
-```
-
-## Database Reset
-
-If you need to reset the database:
-
-```bash
-cd backend
-
-# Drop and recreate the database (using psql)
-psql -U postgres -c "DROP DATABASE medusa_db;"
-psql -U postgres -c "CREATE DATABASE medusa_db;"
-
-# Run migrations
-npx medusa db:migrate
-
-# Seed with default data
-npm run seed
+cd frontend
+yarn dev
 ```
 
 ## Troubleshooting
 
-### Publishable Key Error
-If you encounter a "Missing publishable key" error in the frontend:
-1. Access the Medusa admin at `http://localhost:9000/app`
-2. Navigate to Settings → Publishable API Keys
-3. Copy the key and add it to your frontend `.env.local` file as `NEXT_PUBLIC_MEDUSA_PUBLISHABLE_KEY`
-
-### URL/Path Issues
-If you encounter "Could not read from file" or 404 errors for admin assets:
-- Ensure your project path does **not** contain special characters like `#`.
-- Example: `/User/#Project` will break Vite/Esbuild. Rename it to `/User/_Project`.
-
 ### Port Already in Use
-If you get a "port already in use" error:
-- Backend: Check for processes using port 9000 and kill them
-- Frontend: Check for processes using port 8000 and kill them
+If you get a "port already in use" error, you can kill the processes running on ports 9000 and 8000:
 
 ```bash
-# Find process using a specific port (e.g., 9000)
-lsof -ti:9000
+# Find and kill process on port 9000 (Backend)
+lsof -ti:9000 | xargs kill -9
 
-# Kill the process
-kill -9 $(lsof -ti:9000)
+# Find and kill process on port 8000 (Frontend)
+lsof -ti:8000 | xargs kill -9
 ```
 
-## Notes
-
-- The frontend uses **yarn** as its package manager
-- The backend uses **npm** as its package manager
-- Make sure PostgreSQL is running before starting the backend
-- The frontend requires the backend to be running to function properly
+### Database Issues
+If you need to reset the database, navigate to the `backend` directory and check the specific README there or use `npx medusa db:migrate` and `npm run seed`.

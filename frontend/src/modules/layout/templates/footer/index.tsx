@@ -1,155 +1,141 @@
-import { listCategories } from "@lib/data/categories"
-import { listCollections } from "@lib/data/collections"
-import { Text, clx } from "@medusajs/ui"
-
+import { Text } from "@medusajs/ui"
 import LocalizedClientLink from "@modules/common/components/localized-client-link"
-import MedusaCTA from "@modules/layout/components/medusa-cta"
 
 export default async function Footer() {
-  const { collections } = await listCollections({
-    fields: "*products",
-  })
-  const productCategories = await listCategories()
-
   return (
-    <footer className="border-t border-ui-border-base w-full">
+    <footer className="border-t border-ui-border-base w-full bg-gray-50">
       <div className="content-container flex flex-col w-full">
-        <div className="flex flex-col gap-y-6 xsmall:flex-row items-start justify-between py-40">
-          <div>
-            <LocalizedClientLink
-              href="/"
-              className="txt-compact-xlarge-plus text-ui-fg-subtle hover:text-ui-fg-base uppercase"
-            >
-              Medusa Store
-            </LocalizedClientLink>
-          </div>
-          <div className="text-small-regular gap-10 md:gap-x-16 grid grid-cols-2 sm:grid-cols-3">
-            {productCategories && productCategories?.length > 0 && (
-              <div className="flex flex-col gap-y-2">
-                <span className="txt-small-plus txt-ui-fg-base">
-                  Categories
-                </span>
-                <ul
-                  className="grid grid-cols-1 gap-2"
-                  data-testid="footer-categories"
-                >
-                  {productCategories?.slice(0, 6).map((c) => {
-                    if (c.parent_category) {
-                      return
-                    }
+        {/* Header */}
+        <div className="py-8 border-b border-gray-200">
+          <h2 className="text-2xl font-bold text-black">Quickdose.co.za</h2>
+        </div>
 
-                    const children =
-                      c.category_children?.map((child) => ({
-                        name: child.name,
-                        handle: child.handle,
-                        id: child.id,
-                      })) || null
-
-                    return (
-                      <li
-                        className="flex flex-col gap-2 text-ui-fg-subtle txt-small"
-                        key={c.id}
-                      >
-                        <LocalizedClientLink
-                          className={clx(
-                            "hover:text-ui-fg-base",
-                            children && "txt-small-plus"
-                          )}
-                          href={`/categories/${c.handle}`}
-                          data-testid="category-link"
-                        >
-                          {c.name}
-                        </LocalizedClientLink>
-                        {children && (
-                          <ul className="grid grid-cols-1 ml-3 gap-2">
-                            {children &&
-                              children.map((child) => (
-                                <li key={child.id}>
-                                  <LocalizedClientLink
-                                    className="hover:text-ui-fg-base"
-                                    href={`/categories/${child.handle}`}
-                                    data-testid="category-link"
-                                  >
-                                    {child.name}
-                                  </LocalizedClientLink>
-                                </li>
-                              ))}
-                          </ul>
-                        )}
-                      </li>
-                    )
-                  })}
-                </ul>
-              </div>
-            )}
-            {collections && collections.length > 0 && (
-              <div className="flex flex-col gap-y-2">
-                <span className="txt-small-plus txt-ui-fg-base">
-                  Collections
-                </span>
-                <ul
-                  className={clx(
-                    "grid grid-cols-1 gap-2 text-ui-fg-subtle txt-small",
-                    {
-                      "grid-cols-2": (collections?.length || 0) > 3,
-                    }
-                  )}
-                >
-                  {collections?.slice(0, 6).map((c) => (
-                    <li key={c.id}>
-                      <LocalizedClientLink
-                        className="hover:text-ui-fg-base"
-                        href={`/collections/${c.handle}`}
-                      >
-                        {c.title}
-                      </LocalizedClientLink>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            )}
-            <div className="flex flex-col gap-y-2">
-              <span className="txt-small-plus txt-ui-fg-base">Medusa</span>
-              <ul className="grid grid-cols-1 gap-y-2 text-ui-fg-subtle txt-small">
-                <li>
-                  <a
-                    href="https://github.com/medusajs"
-                    target="_blank"
-                    rel="noreferrer"
-                    className="hover:text-ui-fg-base"
-                  >
-                    GitHub
-                  </a>
-                </li>
-                <li>
-                  <a
-                    href="https://docs.medusajs.com"
-                    target="_blank"
-                    rel="noreferrer"
-                    className="hover:text-ui-fg-base"
-                  >
-                    Documentation
-                  </a>
-                </li>
-                <li>
-                  <a
-                    href="https://github.com/medusajs/nextjs-starter-medusa"
-                    target="_blank"
-                    rel="noreferrer"
-                    className="hover:text-ui-fg-base"
-                  >
-                    Source code
-                  </a>
-                </li>
-              </ul>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 py-12">
+          {/* Location */}
+          <div className="flex flex-col gap-y-3">
+            <span className="txt-small-plus text-black font-semibold">Location</span>
+            <div className="text-sm text-gray-700 flex flex-col gap-y-2">
+              <p>89 Ridder Street, Oos-Einde,</p>
+              <p>Rustenburg, 2999, South Africa</p>
+              <a href="mailto:quickdose.co.za@gmail.com" className="hover:text-black">
+                quickdose.co.za@gmail.com
+              </a>
+              <a href="tel:+27635291651" className="hover:text-black">
+                +27 63 529 1651
+              </a>
             </div>
           </div>
+
+          {/* Menu */}
+          <div className="flex flex-col gap-y-3">
+            <span className="txt-small-plus text-black font-semibold">Menu</span>
+            <ul className="flex flex-col gap-y-2 text-sm text-gray-700 items-start text-left">
+              <li>
+                <LocalizedClientLink href="/" className="hover:text-black">
+                  Home
+                </LocalizedClientLink>
+              </li>
+              <li>
+                <LocalizedClientLink href="/store" className="hover:text-black">
+                  Shop
+                </LocalizedClientLink>
+              </li>
+              <li>
+                <LocalizedClientLink href="/about" className="hover:text-black">
+                  About
+                </LocalizedClientLink>
+              </li>
+              <li>
+                <LocalizedClientLink href="/contact" className="hover:text-black">
+                  Contact
+                </LocalizedClientLink>
+              </li>
+
+              <li>
+                <LocalizedClientLink href="/become-driver" className="hover:text-black">
+                  Become a Driver
+                </LocalizedClientLink>
+              </li>
+            </ul>
+          </div>
+
+          {/* FAQ */}
+          <div className="flex flex-col gap-y-3">
+            <span className="txt-small-plus text-black font-semibold">FAQ</span>
+            <ul className="flex flex-col gap-y-2 text-sm text-gray-700 items-start text-left">
+              <li>
+                <LocalizedClientLink href="/terms-and-conditions" className="hover:text-black">
+                  Terms & Conditions
+                </LocalizedClientLink>
+              </li>
+              <li>
+                <LocalizedClientLink href="/privacy-policy" className="hover:text-black">
+                  Privacy Policy
+                </LocalizedClientLink>
+              </li>
+              <li>
+                <LocalizedClientLink href="/shipping-policy" className="hover:text-black">
+                  Shipping Policy
+                </LocalizedClientLink>
+              </li>
+              <li>
+                <LocalizedClientLink href="/refund-policy" className="hover:text-black">
+                  Refund Policy
+                </LocalizedClientLink>
+              </li>
+              <li>
+                <LocalizedClientLink href="/cookie-policy" className="hover:text-black">
+                  Cookie Policy
+                </LocalizedClientLink>
+              </li>
+              <li>
+                <LocalizedClientLink href="/accessibility-statement" className="hover:text-black">
+                  Accessibility Statement
+                </LocalizedClientLink>
+              </li>
+            </ul>
+          </div>
+
+          {/* Social */}
+          <div className="flex flex-col gap-y-3">
+            <span className="txt-small-plus text-black font-semibold">Social</span>
+            <ul className="flex flex-col gap-y-2 text-sm text-gray-700">
+              <li>
+                <a
+                  href="https://web.facebook.com/quickdose.co"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="hover:text-black"
+                >
+                  Facebook
+                </a>
+              </li>
+              <li>
+                <a
+                  href="https://www.instagram.com/quickdose.co.za/"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="hover:text-black"
+                >
+                  Instagram
+                </a>
+              </li>
+            </ul>
+          </div>
         </div>
-        <div className="flex w-full mb-16 justify-between text-ui-fg-muted">
-          <Text className="txt-compact-small">
-            © {new Date().getFullYear()} Medusa Store. All rights reserved.
+
+        {/* Disclaimer */}
+        <div className="border-t border-gray-200 py-6">
+          <Text className="text-xs text-gray-600 leading-relaxed">
+            <strong>Disclaimer:</strong> In compliance with the Tobacco Products Control Act (1993), the Liquor Act, and the Cannabis for Private Purposes Act in South Africa, this website is intended for persons 18 years and older. No vape, alcohol, or cannabis-related products are sold or supplied to anyone under the age of 18. ID verification may be required upon delivery.
           </Text>
-          <MedusaCTA />
+        </div>
+
+        {/* Copyright */}
+        <div className="flex w-full pb-8 justify-center text-ui-fg-muted">
+          <Text className="txt-compact-small text-gray-600">
+            © {new Date().getFullYear()} by Quickdose.co.za. All rights reserved.
+          </Text>
         </div>
       </div>
     </footer>

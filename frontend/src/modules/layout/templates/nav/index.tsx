@@ -1,4 +1,5 @@
 import { Suspense } from "react"
+import Image from "next/image"
 
 import { listRegions } from "@lib/data/regions"
 import { listLocales } from "@lib/data/locales"
@@ -20,18 +21,19 @@ export default async function Nav() {
       <header className="relative h-16 mx-auto border-b duration-200 bg-white border-ui-border-base">
         <nav className="content-container txt-xsmall-plus text-ui-fg-subtle flex items-center justify-between w-full h-full text-small-regular">
           <div className="flex-1 basis-0 h-full flex items-center">
-            <div className="h-full">
-              <SideMenu regions={regions} locales={locales} currentLocale={currentLocale} />
-            </div>
-          </div>
-
-          <div className="flex items-center h-full">
             <LocalizedClientLink
               href="/"
               className="txt-compact-xlarge-plus hover:text-ui-fg-base uppercase"
               data-testid="nav-store-link"
             >
-              Medusa Store
+              <Image
+                src="/logo.png"
+                alt="Quickdose"
+                width={150}
+                height={40}
+                style={{ width: "auto" }}
+                className="h-10 w-auto object-contain"
+              />
             </LocalizedClientLink>
           </div>
 
@@ -61,6 +63,6 @@ export default async function Nav() {
           </div>
         </nav>
       </header>
-    </div>
+    </div >
   )
 }
