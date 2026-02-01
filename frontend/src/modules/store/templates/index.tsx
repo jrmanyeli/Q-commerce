@@ -34,6 +34,7 @@ const StoreTemplate = ({
             categories={categories}
             collections={collections}
             isSidebar={true}
+            countryCode={countryCode}
           />
         </aside>
 
@@ -42,6 +43,7 @@ const StoreTemplate = ({
             sortBy={sort}
             categories={categories}
             collections={collections}
+            countryCode={countryCode}
           />
 
           <div className="flex flex-col mb-8 mt-4 small:mt-0">

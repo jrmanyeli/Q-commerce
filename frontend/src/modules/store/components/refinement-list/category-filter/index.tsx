@@ -10,9 +10,10 @@ type CategoryFilterProps = {
     title?: string
     titleClassName?: string
     categoryClassName?: string
+    countryCode?: string
 }
 
-const CategoryFilter = ({ categories, title = "Categories", titleClassName, categoryClassName }: CategoryFilterProps) => {
+const CategoryFilter = ({ categories, title = "Categories", titleClassName, categoryClassName, countryCode }: CategoryFilterProps) => {
     const pathname = usePathname()
 
     if (!categories?.length) {
@@ -25,9 +26,12 @@ const CategoryFilter = ({ categories, title = "Categories", titleClassName, cate
             <ul className="flex flex-col gap-2">
                 {categories.map((c) => (
                     <li key={c.id}>
-                        <Link href={`/categories/${c.handle}`} className={clx("txt-compact-small hover:text-gray-900 text-black", categoryClassName, {
-                            "text-black font-semibold": pathname === `/categories/${c.handle}`
-                        })}>
+                        <Link
+                            href={`/${countryCode}/categories/${c.handle}`}
+                            className={clx("txt-compact-small hover:text-gray-900 text-black", categoryClassName, {
+                                "text-black font-semibold": pathname === `/${countryCode}/categories/${c.handle}`
+                            })}
+                        >
                             {c.name}
                         </Link>
                     </li>

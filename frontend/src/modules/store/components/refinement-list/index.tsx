@@ -21,6 +21,7 @@ type RefinementListProps = {
   categories?: HttpTypes.StoreProductCategory[]
   'data-testid'?: string
   isSidebar?: boolean
+  countryCode: string
 }
 
 const RefinementList = ({
@@ -28,7 +29,8 @@ const RefinementList = ({
   collections,
   categories,
   'data-testid': dataTestId,
-  isSidebar = false
+  isSidebar = false,
+  countryCode
 }: RefinementListProps) => {
   const router = useRouter()
   const pathname = usePathname()
@@ -54,10 +56,10 @@ const RefinementList = ({
       <div className="flex flex-col gap-y-8 w-full py-2">
         <SortProducts sortBy={sortBy} setQueryParams={setQueryParams} />
         {categories && categories.length > 0 && (
-          <CategoryFilter categories={categories} />
+          <CategoryFilter categories={categories} countryCode={countryCode} />
         )}
         {collections && collections.length > 0 && (
-          <CollectionFilter collections={collections} />
+          <CollectionFilter collections={collections} countryCode={countryCode} />
         )}
       </div>
     )
@@ -85,10 +87,10 @@ const RefinementList = ({
                 <div className="overflow-hidden rounded-lg shadow-lg ring-1 ring-black ring-opacity-5 bg-white p-6">
                   <div className="flex flex-col gap-y-8">
                     {collections && collections.length > 0 && (
-                      <CollectionFilter collections={collections} />
+                      <CollectionFilter collections={collections} countryCode={countryCode} />
                     )}
                     {categories && categories.length > 0 && (
-                      <CategoryFilter categories={categories} />
+                      <CategoryFilter categories={categories} countryCode={countryCode} />
                     )}
                   </div>
                 </div>

@@ -52,6 +52,7 @@ export default function CategoryTemplate({
             categories={categories}
             collections={collections}
             isSidebar={true}
+            countryCode={countryCode}
           />
         </aside>
 
@@ -60,6 +61,7 @@ export default function CategoryTemplate({
             sortBy={sort}
             categories={categories}
             collections={collections}
+            countryCode={countryCode}
             data-testid="sort-by-container"
           />
 

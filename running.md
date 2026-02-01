@@ -2,48 +2,60 @@
 
 This guide provides simplified instructions for running the Q-Commerce backend and frontend applications.
 
-## Prerequisites
-
-- Node.js >= 20
-- npm (for backend and root)
-- yarn (for frontend)
-- PostgreSQL database
-
 ## Quick Start
 
-We have simplified the startup process. You can now run both the backend and frontend with a single command from the root directory.
+Everything is now pre-configured. To start both the backend and frontend, run this single command from the root directory:
 
-> **Important**: Ensure your `frontend/.env.local` is configured for local development:
-> - `MEDUSA_BACKEND_URL=http://localhost:9000`
-> - `NEXT_PUBLIC_BASE_URL=http://localhost:8000`
+```bash
+npm run dev
+```
 
-1. **Check Ports** (Optional):
-   If you have run the app before, ensure ports 8000 and 9000 are free.
-   ```bash
-   npm run kill-ports
-   ```
+This will start:
+- **Backend**: [http://localhost:9000](http://localhost:9000)
+- **Frontend**: [http://localhost:8000/za](http://localhost:8000/za)
 
-1. **Install Dependencies** (First time only):
+---
+
+## Simplified Startup (One-Time Setup)
+
+If you are running the application for the first time or after a clean clone:
+
+1. **Install All Dependencies**:
    ```bash
    npm run install:all
    ```
 
-2. **Start Applications**:
+2. **Check Ports** (If ports 8000 or 9000 are blocked):
+   ```bash
+   npm run kill-ports
+   ```
+
+3. **Start Apps**:
    ```bash
    npm run dev
    ```
-   This will start:
-   - Backend on [http://localhost:9000](http://localhost:9000)
-   - Frontend on [http://localhost:8000](http://localhost:8000)
 
-## Configuration Status
+## Recent Fixes & Updates
 
-- **Region**: South Africa (ZA)
-- **Currency**: South African Rand (ZAR)
+### Product Visibility & Navigation (2026-02-01)
+- **Fixed**: Products were missing from the home/store pages (only 2 were showing).
+- **Fixed**: Navigation links in the 'Filter' menu were missing the mandatory `/za/` prefix.
+- **Solution**: 
+  - Updated frontend cache strategy to `no-store` in `lib/data/products.ts` to ensure fresh data.
+  - Dynamically prepended the country code to all category and collection links.
+  - Verified infinite scroll correctly loads the full product catalog.
 
-## Manual Setup (If needed)
+### Pagination & Sorting (2026-01-30)
+- **Fixed**: Pagination mismatch where 34 pages were shown for only 425 products.
+- **Solution**: Updated fetching logic to load all products for accurate client-side sorting and paging.
 
-If you prefer to run them separately:
+### Currency & Display
+- **Currency**: Fixed price display to show actual currency (e.g., R280.00) instead of cents.
+- **Thumbnails**: Updated product image aspect ratio to 1:1 for a cleaner look.
+
+## Manual Setup (Development Only)
+
+If you need to run services independently:
 
 ### Backend
 ```bash
@@ -57,35 +69,14 @@ cd frontend
 yarn dev
 ```
 
-## Recent Fixes
-
-### Pagination Issue (2026-01-30)
-- **Fixed**: Product pagination was showing 34 pages instead of the correct 9 pages
-- **Root Cause**: The `listProductsWithSort` function was only fetching 100 products while calculating total pages based on the full product count
-- **Solution**: Updated to fetch all products by:
-  1. First fetching with limit of 1 to get total count
-  2. Then fetching all products using the actual count
-  3. This ensures all products are available for client-side sorting and pagination
-
-### Currency Display Fix
-- Fixed price display from cents to actual currency (e.g., R280.00 instead of R28,000.00)
-- Updated `convertToLocale` function to divide by 100
-
-### Product Thumbnails
-- Updated product aspect ratio from 9:16 to 1:1 for better display
-
 ## Troubleshooting
 
-### Port Already in Use
-If you get a "port already in use" error, you can kill the processes running on ports 9000 and 8000:
-
+### Kill Processes
+If you get "port already in use", run:
 ```bash
-# Find and kill process on port 9000 (Backend)
-lsof -ti:9000 | xargs kill -9
-
-# Find and kill process on port 8000 (Frontend)
-lsof -ti:8000 | xargs kill -9
+npm run kill-ports
 ```
 
-### Database Issues
-If you need to reset the database, navigate to the `backend` directory and check the specific README there or use `npx medusa db:migrate` and `npm run seed`.
+### Database
+The application uses the `q_commerce_db` PostgreSQL database. Ensure your local PostgreSQL service is running.
+

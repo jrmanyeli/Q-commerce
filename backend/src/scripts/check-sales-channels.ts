@@ -52,7 +52,7 @@ export default async function checkSalesChannels({ container }: ExecArgs) {
     }
 
     // Check Configured Token from Environment (Hardcoded in script for now based on what we saw)
-    const frontendToken = "pk_44dcd7afe0c33138479043ee705825c4d177125b26a55e60d525c03c6d9a226e";
+    const frontendToken = "pk_57555e5979e73341cbecb84869f79969d06ec2f48d77bbc4441935332a63e026";
     logger.info(`\n--- Verifying Frontend Token: ${frontendToken} ---`);
 
     const matchedKey = pubKeys.find(k => k.token === frontendToken);

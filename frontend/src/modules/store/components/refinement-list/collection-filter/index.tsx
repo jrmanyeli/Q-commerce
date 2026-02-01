@@ -7,9 +7,10 @@ import { usePathname } from "next/navigation"
 
 type CollectionFilterProps = {
     collections: HttpTypes.StoreCollection[]
+    countryCode?: string
 }
 
-const CollectionFilter = ({ collections }: CollectionFilterProps) => {
+const CollectionFilter = ({ collections, countryCode }: CollectionFilterProps) => {
     const pathname = usePathname()
 
     if (!collections?.length) {
@@ -22,9 +23,12 @@ const CollectionFilter = ({ collections }: CollectionFilterProps) => {
             <ul className="flex flex-col gap-2">
                 {collections.map((c) => (
                     <li key={c.id}>
-                        <Link href={`/collections/${c.handle}`} className={clx("txt-compact-small hover:text-gray-900 text-black", {
-                            "text-black font-semibold": pathname === `/collections/${c.handle}`
-                        })}>
+                        <Link
+                            href={`/${countryCode}/collections/${c.handle}`}
+                            className={clx("txt-compact-small hover:text-gray-900 text-black", {
+                                "text-black font-semibold": pathname === `/${countryCode}/collections/${c.handle}`
+                            })}
+                        >
                             {c.title}
                         </Link>
                     </li>
